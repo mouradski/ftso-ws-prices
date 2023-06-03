@@ -35,6 +35,8 @@ public abstract class AbstractClientEndpoint {
     protected final ObjectMapper objectMapper = new ObjectMapper();
     protected final List<String> assets;
     protected final List<String> exchanges;
+    protected String uniqueSymbol;
+    protected String uniqueQuote;
     protected Session userSession = null;
     protected Counter counter = new Counter();
     private ScheduledExecutorService executor;
@@ -47,6 +49,8 @@ public abstract class AbstractClientEndpoint {
         this.priceSender = priceSender;
         this.exchanges = exchanges;
         this.assets = assets;
+        this.uniqueSymbol = null;
+        this.uniqueQuote = null;
 
         if (exchanges == null || exchanges.contains(getExchange())) {
             try {
@@ -221,6 +225,7 @@ public abstract class AbstractClientEndpoint {
         prepareConnection();
 
         try {
+            System.out.println(getUri());
             var container = ContainerProvider.getWebSocketContainer();
             container.connectToServer(this, new URI(getUri()));
         } catch (Exception e) {
@@ -253,4 +258,7 @@ public abstract class AbstractClientEndpoint {
         return upperCase ? Constants.USD_USDT_USDC.stream().map(String::toUpperCase).collect(Collectors.toList())
                 : Constants.USD_USDT_USDC;
     }
+
+
+
 }
